@@ -41,6 +41,15 @@ const tmpIcon = L.icon({
     iconSize: [61, 43],
 })
 
+map.on("click", () => {
+    for (const [train, marker] of Object.entries(MARKERS)) {
+        if (marker.line !== undefined) {
+            map.removeLayer(marker.line)
+            delete MARKERS[train].line
+        }
+    }
+})
+
 async function updateData() {
     let data = (await (await fetch(API_URL + "/radar", {
         method: "POST",
@@ -50,11 +59,6 @@ async function updateData() {
         }
     })).json())
 
-    /*MARKERS.forEach((obj) => {
-        map.removeLayer(obj)
-    })
-
-    MARKERS.length = 0*/
     const currentUpdateTime = Date.now().toString();
     data.movements.forEach(train => {
         if (MARKERS[train.tripId] !== undefined) {
@@ -64,7 +68,15 @@ async function updateData() {
             MARKERS[train.tripId] = {
                 marker: L.marker([train.location.latitude, train.location.longitude], {icon: tmpIcon})
                     .bindPopup(train.line.name + " nach " + train.direction)
-                    .addTo(map),
+                    .on("click", () => {
+                        MARKERS[train.tripId].line = L.polyline(train.polyline.features.map((featureCollection) =>
+                            featureCollection.geometry.coordinates.reverse()), {
+                            color: "red",
+                            weight: 3,
+                            opacity: 0.5,
+                            smoothFactor: 1
+                        }).addTo(map)
+                    }).addTo(map),
                 lastUpdate: currentUpdateTime
             }
         }
