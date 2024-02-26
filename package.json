@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "@types/geojson": "^7946.0.14",
+    "@types/leaflet": "^1.9.8",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "leaflet": "^1.9.4"
+  },
+  "name": "sh-live",
+  "version": "1.0.0",
+  "description": "A live tracker of all trains in Schleswig-Holstein",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "TODO"
+  },
+  "author": "Revilum",
+  "license": "GPL-3.0-or-later"
+}
