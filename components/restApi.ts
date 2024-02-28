@@ -22,7 +22,7 @@ async function initServer() {
   })
 
   app.get("/", (_, res) => {
-    res.send(Date.now().toLocaleString())
+    res.send((new Date()).toLocaleString())
   })
 }
 
