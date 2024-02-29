@@ -5,11 +5,14 @@ import {Radar, RadarOptions} from "hafas-client";
 import {client, wss} from "../constants.js";
 
 const clients: Map<string, WebSocket> = new Map()
-let radarData = await getRadarData();
+let radarData: Radar
 
 async function initWss() {
   const id = uuid()
-  wss.on("connection", (ws) => {
+  wss.on("connection", async (ws) => {
+    if (clients.size === 0) {
+      radarData = await getRadarData()
+    }
     clients.set(uuid(), ws)
     ws.send(JSON.stringify(radarData))
   })
@@ -47,9 +50,11 @@ async function getRadarData(): Promise<Radar> {
 }
 
 async function updateRadar() {
-  radarData = await getRadarData()
-  for (const ws of clients.values()) {
-    ws.send(JSON.stringify(radarData))
+  if (clients.size > 0) {
+    radarData = await getRadarData()
+    for (const ws of clients.values()) {
+      ws.send(JSON.stringify(radarData))
+    }
   }
 }
 
