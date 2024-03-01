@@ -15,7 +15,7 @@ async function initServer() {
       polyline: true,
       subStops: true,
       entrances: false,
-      language: "en"
+      language: "de"
     }
     const tripReq = reqParam as TripRequest
     return await client.trip!(tripReq.id, opt)
